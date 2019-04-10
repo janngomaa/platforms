@@ -65,16 +65,19 @@ Vagrant.configure("2") do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", inline: <<-SHELL
+  config.vm.provision "shell", run: 'always', inline: <<-SHELL
      apt-get update
   SHELL
   
+  config.vm.provision "docker" do |d|
+	d.build_image "data/config/",
+		args: "-t 'ietl'"
+  #  d.run "jupyter/datascience-notebook:9b06df75e445",
+  #    cmd: "docker run -it -p 8888:8888 -e JUPYTER_ENABLE_LAB=yes -v /home/vagrant/data/work:/home/jovyan/work jupyter/datascience-notebook:9b06df75e445",
+  #    args: "-v '/vagrant:/var/www'"
+  #  
+  end
+  
   config.vm.provision "shell", path: "data/config/up_script.sh", run: 'always'
   
-  config.vm.provision "docker" do |d|
-    d.run "jupyter/datascience-notebook:9b06df75e445",
-      cmd: "docker run -it -p 8888:8888 -e JUPYTER_ENABLE_LAB=yes -v /home/vagrant/data/work:/home/jovyan/work jupyter/datascience-notebook:9b06df75e445",
-      args: "-v '/vagrant:/var/www'"
-	  
-  end
 end
