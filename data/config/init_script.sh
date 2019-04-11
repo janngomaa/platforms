@@ -1,0 +1,1 @@
+docker build -t ietl -f /home/jovyan/work /home/jovyan/work
